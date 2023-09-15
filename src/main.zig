@@ -108,14 +108,18 @@ test "Matcher" {
     // ? is used to make a distinction when we make assertions. They don't matter
     // ^ to reduce the score for order test
     // $ to eliminate boundary
-    const texts = &[_][]const u8{ "unique", "foo", "foobar", "barfoo", "$order^^^", "xyz_", "abxy", "$order^", "$order^^" };
+    const texts = &[_][]const u8{ "unique", "foo", "foobar", "barfoo", "$order^^^", "$order^", "$order^^" };
     var matcher = MatchFinder.init(a, texts);
     defer matcher.deinit();
     {
-        const results = try matcher.search("unique");
-        defer a.free(results);
-        try expect(results.len == 1);
-        try sliceEq(u8, "unique", results[0]);
+        const unique = try matcher.search("unique");
+        defer a.free(unique);
+        try expect(unique.len == 1);
+        try sliceEq(u8, "unique", unique[0]);
+
+        const none = try matcher.search("no-match");
+        defer a.free(none);
+        try expect(none.len == 0);
     }
     { // order
         const results = try matcher.search("order");
