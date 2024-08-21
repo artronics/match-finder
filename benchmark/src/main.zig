@@ -79,5 +79,3 @@ pub fn main() !void {
 inline fn thisDir() []const u8 {
     return comptime std.fs.path.dirname(@src().file) orelse ".";
 }
-
-test "simple test" {}
